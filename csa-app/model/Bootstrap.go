@@ -5,7 +5,7 @@
 package model
 
 //Created By BootstrapRulesTemplate.txt found under go/resources folder
-//Created @ 2022-10-19 15:57:36.009057 -0400 EDT m=+0.132261755
+//Created @ 2022-12-23 14:50:13.116885617 +0800 +08 m=+1.996453129
 
 func BootstrapRules() []Rule {
     var BootstrapRules = []Rule{
@@ -102,6 +102,196 @@ func BootstrapRules() []Rule {
              { Type: "", Pattern: "", Value: "<javac target=\"1.4\"", Advice: "", Effort: 0, Readiness: 0, Criticality: "", Category: "", Tag: "", Recipe: "", },
              { Type: "", Pattern: "", Value: "<javac target=\"1.5\"", Advice: "", Effort: 0, Readiness: 0, Criticality: "", Category: "", Tag: "", Recipe: "", },
              { Type: "", Pattern: "", Value: "<javac target=\"1.6\"", Advice: "", Effort: 0, Readiness: 0, Criticality: "", Category: "", Tag: "", Recipe: "", },
+             }, },
+        
+            { Name: "gradle-spring-boot-support-version", FileType: "gradle$", Target: "line", Type: "regex", DefaultPattern: "", Advice: "Spring boot version is out of spring boot OSS support scope", Effort: 300, Readiness: 0, Impact: "", Category: "version", Criticality: "Warn",
+            Tags:
+            []Tag{  { Value: "azure spring apps",}, { Value: "spring boot",}, },
+            Recipes:
+            []Recipe{  },
+            Patterns:
+            []Pattern{  { Type: "", Pattern: "", Value: "id( *[:=]? *)\\(?[''\"]?(org\\.springframework\\.boot)[''\"]?(.*)version( *[:=]? *)[''\"]?(2\\.[0-6])", Advice: "", Effort: 0, Readiness: 0, Criticality: "", Category: "", Tag: "", Recipe: "", },
+             { Type: "", Pattern: "", Value: "(?i)(springBootVersion)(.*)(2\\.[0-6])", Advice: "", Effort: 0, Readiness: 0, Criticality: "", Category: "", Tag: "", Recipe: "", },
+             { Type: "", Pattern: "", Value: "org\\.springframework\\.boot[''\"]?( *[:=]? *)[''\"]?(2\\.[0-6])", Advice: "", Effort: 0, Readiness: 0, Criticality: "", Category: "", Tag: "", Recipe: "", },
+             { Type: "", Pattern: "", Value: "org\\.springframework\\.boot(.*)([\\r\\n]+)version( *[:=]? *)[''\"]?(2\\.[0-6])", Advice: "", Effort: 0, Readiness: 0, Criticality: "", Category: "", Tag: "", Recipe: "", },
+             }, },
+        
+            { Name: "gradle-spring-boot-version", FileType: "gradle$", Target: "line", Type: "regex", DefaultPattern: "", Advice: "Spring boot version is too low", Effort: 500, Readiness: 0, Impact: "", Category: "version", Criticality: "Critical",
+            Tags:
+            []Tag{  { Value: "azure spring apps",}, { Value: "spring boot",}, },
+            Recipes:
+            []Recipe{  },
+            Patterns:
+            []Pattern{  { Type: "", Pattern: "", Value: "id( *[:=]? *)\\(?[''\"]?(org\\.springframework\\.boot)[''\"]?(.*)version( *[:=]? *)[''\"]?(1\\.)", Advice: "", Effort: 0, Readiness: 0, Criticality: "", Category: "", Tag: "", Recipe: "", },
+             { Type: "", Pattern: "", Value: "(?i)(springBootVersion)(.*)(1\\.)", Advice: "", Effort: 0, Readiness: 0, Criticality: "", Category: "", Tag: "", Recipe: "", },
+             { Type: "", Pattern: "", Value: "org\\.springframework\\.boot[''\"]?( *[:=]? *)[''\"]?(1\\.)", Advice: "", Effort: 0, Readiness: 0, Criticality: "", Category: "", Tag: "", Recipe: "", },
+             { Type: "", Pattern: "", Value: "org\\.springframework\\.boot(.*)([\\r\\n]+)version( *[:=]? *)[''\"]?(1\\.)", Advice: "", Effort: 0, Readiness: 0, Criticality: "", Category: "", Tag: "", Recipe: "", },
+             }, },
+        
+            { Name: "gradle-spring-cloud-support-version", FileType: "gradle$", Target: "line", Type: "regex", DefaultPattern: "(?i)(springCloudVersion|org\\.springframework\\.cloud)(.*)(%s)", Advice: "Spring cloud version is out of spring boot OSS support scope", Effort: 300, Readiness: 0, Impact: "", Category: "version", Criticality: "Warn",
+            Tags:
+            []Tag{  { Value: "azure spring apps",}, { Value: "spring cloud",}, },
+            Recipes:
+            []Recipe{  },
+            Patterns:
+            []Pattern{  { Type: "", Pattern: "", Value: "2020\\.|ilford|Hoxton|Greenwich|Finchley", Advice: "", Effort: 0, Readiness: 0, Criticality: "", Category: "", Tag: "", Recipe: "", },
+             }, },
+        
+            { Name: "gradle-spring-cloud-version", FileType: "gradle$", Target: "line", Type: "regex", DefaultPattern: "(?i)(springCloudVersion|org\\.springframework\\.cloud)(.*)(%s)", Advice: "Spring cloud version is too low", Effort: 500, Readiness: 0, Impact: "", Category: "version", Criticality: "Critical",
+            Tags:
+            []Tag{  { Value: "azure spring apps",}, { Value: "spring cloud",}, },
+            Recipes:
+            []Recipe{  },
+            Patterns:
+            []Pattern{  { Type: "", Pattern: "", Value: "Edgware|Dalston", Advice: "", Effort: 0, Readiness: 0, Criticality: "", Category: "", Tag: "", Recipe: "", },
+             }, },
+        
+            { Name: "gradle-war", FileType: "gradle$", Target: "line", Type: "regex", DefaultPattern: "(''|\"|\\s|^)(%s)(''|\"|\\s|$)", Advice: "The application is packaging to war. Azure Spring Apps only support jar", Effort: 500, Readiness: 0, Impact: "", Category: "packaging", Criticality: "Critical",
+            Tags:
+            []Tag{  { Value: "azure spring apps",}, { Value: "packaging",}, },
+            Recipes:
+            []Recipe{  },
+            Patterns:
+            []Pattern{  { Type: "", Pattern: "", Value: "war", Advice: "", Effort: 0, Readiness: 0, Criticality: "", Category: "", Tag: "", Recipe: "", },
+             }, },
+        
+            { Name: "maven-feign", FileType: "xml$", Target: "contents", Type: "xpath", DefaultPattern: "", Advice: "The application uses Feign. Spring Cloud Service Registry uses OpenFeign instead. When migrating to Spring Cloud Service Registry, the Feign invocations will no longer be possible. Update the clients to use Spring Cloud OpenFeign(https://spring.io/projects/spring-cloud-openfeign) instead. You can refer to doc "Migrate clients bypassing the service registry"(https://docs.microsoft.com/azure/developer/java/migration/migrate-spring-cloud-to-azure-spring-cloud?pivots=sc-standard-tier#identify-clients-that-bypass-the-service-registry)", Effort: 5, Readiness: 0, Impact: "", Category: "feign", Criticality: "Warn",
+            Tags:
+            []Tag{  { Value: "azure spring apps",}, { Value: "feign",}, },
+            Recipes:
+            []Recipe{  },
+            Patterns:
+            []Pattern{  { Type: "", Pattern: "", Value: "//*[groupId=''com.netflix.feign'']", Advice: "", Effort: 0, Readiness: 0, Criticality: "", Category: "", Tag: "", Recipe: "", },
+             { Type: "", Pattern: "", Value: "//*[groupId=''org.springframework.cloud'' and artifactId=''spring-cloud-starter-feign'']", Advice: "", Effort: 0, Readiness: 0, Criticality: "", Category: "", Tag: "", Recipe: "", },
+             }, },
+        
+            { Name: "maven-spring-boot-support-version", FileType: "xml$", Target: "contents", Type: "xpath", DefaultPattern: "//*[groupId=''org.springframework.boot'' and starts-with(version,''%s'')]/version", Advice: "Spring boot version is out of spring boot OSS support scope", Effort: 300, Readiness: 0, Impact: "", Category: "version", Criticality: "Warn",
+            Tags:
+            []Tag{  { Value: "azure spring apps",}, { Value: "spring boot",}, },
+            Recipes:
+            []Recipe{  },
+            Patterns:
+            []Pattern{  { Type: "", Pattern: "", Value: "2.0", Advice: "", Effort: 0, Readiness: 0, Criticality: "", Category: "", Tag: "", Recipe: "", },
+             { Type: "", Pattern: "", Value: "2.1", Advice: "", Effort: 0, Readiness: 0, Criticality: "", Category: "", Tag: "", Recipe: "", },
+             { Type: "", Pattern: "", Value: "2.2", Advice: "", Effort: 0, Readiness: 0, Criticality: "", Category: "", Tag: "", Recipe: "", },
+             { Type: "", Pattern: "", Value: "2.3", Advice: "", Effort: 0, Readiness: 0, Criticality: "", Category: "", Tag: "", Recipe: "", },
+             { Type: "", Pattern: "", Value: "2.4", Advice: "", Effort: 0, Readiness: 0, Criticality: "", Category: "", Tag: "", Recipe: "", },
+             { Type: "", Pattern: "", Value: "2.5", Advice: "", Effort: 0, Readiness: 0, Criticality: "", Category: "", Tag: "", Recipe: "", },
+             { Type: "", Pattern: "", Value: "2.6", Advice: "", Effort: 0, Readiness: 0, Criticality: "", Category: "", Tag: "", Recipe: "", },
+             }, },
+        
+            { Name: "maven-spring-boot-version", FileType: "xml$", Target: "contents", Type: "xpath", DefaultPattern: "//*[groupId=''org.springframework.boot'' and starts-with(version,''%s'')]/version", Advice: "Spring boot version is too low", Effort: 500, Readiness: 0, Impact: "", Category: "version", Criticality: "Critical",
+            Tags:
+            []Tag{  { Value: "azure spring apps",}, { Value: "spring boot",}, },
+            Recipes:
+            []Recipe{  },
+            Patterns:
+            []Pattern{  { Type: "", Pattern: "", Value: "1", Advice: "", Effort: 0, Readiness: 0, Criticality: "", Category: "", Tag: "", Recipe: "", },
+             }, },
+        
+            { Name: "maven-spring-cloud-support-version", FileType: "xml$", Target: "contents", Type: "xpath", DefaultPattern: "", Advice: "Spring cloud version is out of spring boot OSS support scope", Effort: 300, Readiness: 0, Impact: "", Category: "version", Criticality: "Warn",
+            Tags:
+            []Tag{  { Value: "azure spring apps",}, { Value: "spring cloud",}, },
+            Recipes:
+            []Recipe{  },
+            Patterns:
+            []Pattern{  { Type: "", Pattern: "", Value: "//*[groupId=''org.springframework.cloud'' and matches(version,''(?i)^2020'')]/version", Advice: "", Effort: 0, Readiness: 0, Criticality: "", Category: "", Tag: "", Recipe: "", },
+             { Type: "", Pattern: "", Value: "//*[groupId=''org.springframework.cloud'' and matches(version,''(?i)^ilford'')]/version", Advice: "", Effort: 0, Readiness: 0, Criticality: "", Category: "", Tag: "", Recipe: "", },
+             { Type: "", Pattern: "", Value: "//*[groupId=''org.springframework.cloud'' and matches(version,''(?i)^Hoxton'')]/version", Advice: "", Effort: 0, Readiness: 0, Criticality: "", Category: "", Tag: "", Recipe: "", },
+             { Type: "", Pattern: "", Value: "//*[groupId=''org.springframework.cloud'' and matches(version,''(?i)^Greenwich'')]/version", Advice: "", Effort: 0, Readiness: 0, Criticality: "", Category: "", Tag: "", Recipe: "", },
+             { Type: "", Pattern: "", Value: "//*[groupId=''org.springframework.cloud'' and matches(version,''(?i)^Finchley'')]/version", Advice: "", Effort: 0, Readiness: 0, Criticality: "", Category: "", Tag: "", Recipe: "", },
+             { Type: "", Pattern: "", Value: "//*[matches(name(), \"spring-?cloud.version\") and matches(text(),''(?i)^2020'')]", Advice: "", Effort: 0, Readiness: 0, Criticality: "", Category: "", Tag: "", Recipe: "", },
+             { Type: "", Pattern: "", Value: "//*[matches(name(), \"spring-?cloud.version\") and matches(text(),''(?i)^ilford'')]", Advice: "", Effort: 0, Readiness: 0, Criticality: "", Category: "", Tag: "", Recipe: "", },
+             { Type: "", Pattern: "", Value: "//*[matches(name(), \"spring-?cloud.version\") and matches(text(),''(?i)^Hoxton'')]", Advice: "", Effort: 0, Readiness: 0, Criticality: "", Category: "", Tag: "", Recipe: "", },
+             { Type: "", Pattern: "", Value: "//*[matches(name(), \"spring-?cloud.version\") and matches(text(),''(?i)^Greenwich'')]", Advice: "", Effort: 0, Readiness: 0, Criticality: "", Category: "", Tag: "", Recipe: "", },
+             { Type: "", Pattern: "", Value: "//*[matches(name(), \"spring-?cloud.version\") and matches(text(),''(?i)^Finchley'')]", Advice: "", Effort: 0, Readiness: 0, Criticality: "", Category: "", Tag: "", Recipe: "", },
+             }, },
+        
+            { Name: "maven-spring-cloud-version", FileType: "xml$", Target: "contents", Type: "xpath", DefaultPattern: "", Advice: "Spring cloud version is too low", Effort: 500, Readiness: 0, Impact: "", Category: "version", Criticality: "Critical",
+            Tags:
+            []Tag{  { Value: "azure spring apps",}, { Value: "spring cloud",}, },
+            Recipes:
+            []Recipe{  },
+            Patterns:
+            []Pattern{  { Type: "", Pattern: "", Value: "//*[groupId=''org.springframework.cloud'' and matches(version,''(?i)^Edgware'')]/version", Advice: "", Effort: 0, Readiness: 0, Criticality: "", Category: "", Tag: "", Recipe: "", },
+             { Type: "", Pattern: "", Value: "//*[groupId=''org.springframework.cloud'' and matches(version,''(?i)^Dalston'')]/version", Advice: "", Effort: 0, Readiness: 0, Criticality: "", Category: "", Tag: "", Recipe: "", },
+             { Type: "", Pattern: "", Value: "//*[matches(name(), \"spring-?cloud.version\") and matches(text(),''(?i)^Edgware'')]", Advice: "", Effort: 0, Readiness: 0, Criticality: "", Category: "", Tag: "", Recipe: "", },
+             { Type: "", Pattern: "", Value: "//*[matches(name(), \"spring-?cloud.version\") and matches(text(),''(?i)^Dalston'')]", Advice: "", Effort: 0, Readiness: 0, Criticality: "", Category: "", Tag: "", Recipe: "", },
+             }, },
+        
+            { Name: "maven-war", FileType: "xml$", Target: "contents", Type: "xpath", DefaultPattern: "", Advice: "The application is packaging to war. Azure Spring Apps only support jar", Effort: 500, Readiness: 0, Impact: "", Category: "packaging", Criticality: "Critical",
+            Tags:
+            []Tag{  { Value: "azure spring apps",}, { Value: "packaging",}, },
+            Recipes:
+            []Recipe{  },
+            Patterns:
+            []Pattern{  { Type: "", Pattern: "", Value: "//*[matches(text(),''(?i)^war$'')]", Advice: "", Effort: 0, Readiness: 0, Criticality: "", Category: "", Tag: "", Recipe: "", },
+             }, },
+        
+            { Name: "maven-zipkin", FileType: "xml$", Target: "contents", Type: "xpath", DefaultPattern: "", Advice: "The application uses Zipkin. Update the application to use Azure Monitor(https://docs.microsoft.com/azure/azure-monitor/app/distributed-tracing) instead. You can refer to doc "Spring Boot to Azure - identify Zipkin dependencies"(https://docs.microsoft.com/azure/developer/java/migration/migrate-spring-boot-to-azure-kubernetes-service#identify-zipkin-dependencies)", Effort: 5, Readiness: 0, Impact: "", Category: "zipkin", Criticality: "Warn",
+            Tags:
+            []Tag{  { Value: "azure spring apps",}, { Value: "zipkin",}, },
+            Recipes:
+            []Recipe{  },
+            Patterns:
+            []Pattern{  { Type: "", Pattern: "", Value: "//*[matches(groupId, \"io.zipkin\")]", Advice: "", Effort: 0, Readiness: 0, Criticality: "", Category: "", Tag: "", Recipe: "", },
+             { Type: "", Pattern: "", Value: "//*[groupId=''org.springframework.boot'' and artifactId=''spring-cloud-starter-zipkin'']", Advice: "", Effort: 0, Readiness: 0, Criticality: "", Category: "", Tag: "", Recipe: "", },
+             }, },
+        
+            { Name: "properties-config-client-configs", FileType: "properties$", Target: "line", Type: "regex", DefaultPattern: "", Advice: "ASA will inject the config server connection info upon app start", Effort: 3, Readiness: 0, Impact: "", Category: "config server", Criticality: "Warn",
+            Tags:
+            []Tag{  { Value: "azure spring apps",}, { Value: "config server",}, },
+            Recipes:
+            []Recipe{  },
+            Patterns:
+            []Pattern{  { Type: "", Pattern: "", Value: "(^|\\s)spring\\.config\\.import", Advice: "", Effort: 0, Readiness: 0, Criticality: "", Category: "", Tag: "", Recipe: "", },
+             { Type: "", Pattern: "", Value: "(^|\\s)spring\\.cloud\\.config\\.uri", Advice: "", Effort: 0, Readiness: 0, Criticality: "", Category: "", Tag: "", Recipe: "", },
+             }, },
+        
+            { Name: "properties-eureka-client-configs", FileType: "properties$", Target: "line", Type: "regex", DefaultPattern: "", Advice: "ASA will inject the eureka connection info upon app start", Effort: 3, Readiness: 0, Impact: "", Category: "eureka", Criticality: "Warn",
+            Tags:
+            []Tag{  { Value: "azure spring apps",}, { Value: "eureka",}, },
+            Recipes:
+            []Recipe{  },
+            Patterns:
+            []Pattern{  { Type: "", Pattern: "", Value: "(^|\\s)eureka\\.client\\.(service-url|serviceUrl)", Advice: "", Effort: 0, Readiness: 0, Criticality: "", Category: "", Tag: "", Recipe: "", },
+             }, },
+        
+            { Name: "properties-nonstandard-port", FileType: "properties$", Target: "line", Type: "regex", DefaultPattern: "", Advice: "ASA overwrites the server.port setting in the deployed application. If any clients of the clients rely on the application being available on a port other than 443, you will need to modify them", Effort: 3, Readiness: 0, Impact: "", Category: "port", Criticality: "Warn",
+            Tags:
+            []Tag{  { Value: "azure spring apps",}, { Value: "port",}, },
+            Recipes:
+            []Recipe{  },
+            Patterns:
+            []Pattern{  { Type: "", Pattern: "", Value: "(^|\\.|\\s)server\\.port", Advice: "", Effort: 0, Readiness: 0, Criticality: "", Category: "", Tag: "", Recipe: "", },
+             }, },
+        
+            { Name: "yaml-config-client-configs", FileType: "(yaml$|yml$)", Target: "contents", Type: "yamlpath", DefaultPattern: "", Advice: "ASA will inject the config server connection info upon app start", Effort: 3, Readiness: 0, Impact: "", Category: "config server", Criticality: "Warn",
+            Tags:
+            []Tag{  { Value: "azure spring apps",}, { Value: "config server",}, },
+            Recipes:
+            []Recipe{  },
+            Patterns:
+            []Pattern{  { Type: "", Pattern: "", Value: "$.spring.config.import", Advice: "", Effort: 0, Readiness: 0, Criticality: "", Category: "", Tag: "", Recipe: "", },
+             { Type: "", Pattern: "", Value: "$.spring.cloud.config.uri", Advice: "", Effort: 0, Readiness: 0, Criticality: "", Category: "", Tag: "", Recipe: "", },
+             }, },
+        
+            { Name: "yaml-eureka-client-configs", FileType: "(yaml$|yml$)", Target: "contents", Type: "yamlpath", DefaultPattern: "", Advice: "ASA will inject the eureka connection info upon app start", Effort: 3, Readiness: 0, Impact: "", Category: "eureka", Criticality: "Warn",
+            Tags:
+            []Tag{  { Value: "azure spring apps",}, { Value: "eureka",}, },
+            Recipes:
+            []Recipe{  },
+            Patterns:
+            []Pattern{  { Type: "", Pattern: "", Value: "$.eureka.client[\"service-url\",\"serviceUrl\"]", Advice: "", Effort: 0, Readiness: 0, Criticality: "", Category: "", Tag: "", Recipe: "", },
+             }, },
+        
+            { Name: "yaml-nonstandard-port", FileType: "(yaml$|yml$)", Target: "contents", Type: "yamlpath", DefaultPattern: "", Advice: "ASA overwrites the server.port setting in the deployed application. If any clients of the clients rely on the application being available on a port other than 443, you will need to modify them", Effort: 3, Readiness: 0, Impact: "", Category: "port", Criticality: "Warn",
+            Tags:
+            []Tag{  { Value: "azure spring apps",}, { Value: "port",}, },
+            Recipes:
+            []Recipe{  },
+            Patterns:
+            []Pattern{  { Type: "", Pattern: "", Value: "$..server.port", Advice: "", Effort: 0, Readiness: 0, Criticality: "", Category: "", Tag: "", Recipe: "", },
              }, },
         
             { Name: "bootCDI", FileType: "xml$", Target: "line", Type: "contains", DefaultPattern: "", Advice: "Automatic remediation with Bootifier", Effort: 2, Readiness: 2, Impact: "", Category: "cdi", Criticality: "",
