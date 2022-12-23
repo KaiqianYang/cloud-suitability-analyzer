@@ -5,7 +5,7 @@
 package model
 
 //Created By BootstrapRulesTemplate.txt found under go/resources folder
-//Created @ 2022-12-23 14:50:13.116885617 +0800 +08 m=+1.996453129
+//Created @ 2022-12-23 16:03:08.327854343 +0800 +08 m=+3.354471247
 
 func BootstrapRules() []Rule {
     var BootstrapRules = []Rule{
@@ -155,7 +155,7 @@ func BootstrapRules() []Rule {
             []Pattern{  { Type: "", Pattern: "", Value: "war", Advice: "", Effort: 0, Readiness: 0, Criticality: "", Category: "", Tag: "", Recipe: "", },
              }, },
         
-            { Name: "maven-feign", FileType: "xml$", Target: "contents", Type: "xpath", DefaultPattern: "", Advice: "The application uses Feign. Spring Cloud Service Registry uses OpenFeign instead. When migrating to Spring Cloud Service Registry, the Feign invocations will no longer be possible. Update the clients to use Spring Cloud OpenFeign(https://spring.io/projects/spring-cloud-openfeign) instead. You can refer to doc "Migrate clients bypassing the service registry"(https://docs.microsoft.com/azure/developer/java/migration/migrate-spring-cloud-to-azure-spring-cloud?pivots=sc-standard-tier#identify-clients-that-bypass-the-service-registry)", Effort: 5, Readiness: 0, Impact: "", Category: "feign", Criticality: "Warn",
+            { Name: "maven-feign", FileType: "xml$", Target: "contents", Type: "xpath", DefaultPattern: "", Advice: "The application uses Feign. Spring Cloud Service Registry uses OpenFeign instead. When migrating to Spring Cloud Service Registry, the Feign invocations will no longer be possible. Update the clients to use Spring Cloud OpenFeign(https://spring.io/projects/spring-cloud-openfeign) instead. You can refer to doc, Migrate Clients Bypassing The Service Registry(https://docs.microsoft.com/azure/developer/java/migration/migrate-spring-cloud-to-azure-spring-cloud?pivots=sc-standard-tier#identify-clients-that-bypass-the-service-registry)", Effort: 5, Readiness: 0, Impact: "", Category: "feign", Criticality: "Warn",
             Tags:
             []Tag{  { Value: "azure spring apps",}, { Value: "feign",}, },
             Recipes:
@@ -228,7 +228,7 @@ func BootstrapRules() []Rule {
             []Pattern{  { Type: "", Pattern: "", Value: "//*[matches(text(),''(?i)^war$'')]", Advice: "", Effort: 0, Readiness: 0, Criticality: "", Category: "", Tag: "", Recipe: "", },
              }, },
         
-            { Name: "maven-zipkin", FileType: "xml$", Target: "contents", Type: "xpath", DefaultPattern: "", Advice: "The application uses Zipkin. Update the application to use Azure Monitor(https://docs.microsoft.com/azure/azure-monitor/app/distributed-tracing) instead. You can refer to doc "Spring Boot to Azure - identify Zipkin dependencies"(https://docs.microsoft.com/azure/developer/java/migration/migrate-spring-boot-to-azure-kubernetes-service#identify-zipkin-dependencies)", Effort: 5, Readiness: 0, Impact: "", Category: "zipkin", Criticality: "Warn",
+            { Name: "maven-zipkin", FileType: "xml$", Target: "contents", Type: "xpath", DefaultPattern: "", Advice: "The application uses Zipkin. Update the application to use Azure Monitor(https://docs.microsoft.com/azure/azure-monitor/app/distributed-tracing) instead. You can refer to doc, Spring Boot to Azure - identify Zipkin dependencies(https://docs.microsoft.com/azure/developer/java/migration/migrate-spring-boot-to-azure-kubernetes-service#identify-zipkin-dependencies)", Effort: 5, Readiness: 0, Impact: "", Category: "zipkin", Criticality: "Warn",
             Tags:
             []Tag{  { Value: "azure spring apps",}, { Value: "zipkin",}, },
             Recipes:

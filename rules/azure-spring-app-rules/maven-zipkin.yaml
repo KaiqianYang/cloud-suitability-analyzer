@@ -3,7 +3,7 @@ filetype: xml$
 target: contents
 type: xpath
 criticality: Warn
-advice: The application uses Zipkin. Update the application to use Azure Monitor(https://docs.microsoft.com/azure/azure-monitor/app/distributed-tracing) instead. You can refer to doc "Spring Boot to Azure - identify Zipkin dependencies"(https://docs.microsoft.com/azure/developer/java/migration/migrate-spring-boot-to-azure-kubernetes-service#identify-zipkin-dependencies)
+advice: The application uses Zipkin. Update the application to use Azure Monitor(https://docs.microsoft.com/azure/azure-monitor/app/distributed-tracing) instead. You can refer to doc, Spring Boot to Azure - identify Zipkin dependencies(https://docs.microsoft.com/azure/developer/java/migration/migrate-spring-boot-to-azure-kubernetes-service#identify-zipkin-dependencies)
 effort: 5
 category: zipkin
 tags:
