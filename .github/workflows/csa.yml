@@ -43,8 +43,8 @@ jobs:
 #      with:
 #        go-version: 1.18.3
 
-    - name: install go-bindata
-      run: brew update && brew install go-bindata
+#    - name: install go-bindata
+#      run: brew update && brew install go-bindata
 
     - name: install gcc
       run: brew update && brew install gcc
