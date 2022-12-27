@@ -38,16 +38,16 @@ jobs:
     - name: Check out code into the Go module directory
       uses: actions/checkout@master
 
-    - name: Setup Go
-      uses: actions/setup-go@master
-      with:
-        go-version: ‘1.18.3’
+#    - name: Setup Go
+#      uses: actions/setup-go@master
+#      with:
+#        go-version: 1.18.3
 
     - name: install go-bindata
-      run: brew install go-bindata
+      run: brew update && brew install go-bindata
 
     - name: install gcc
-      run: brew install gcc
+      run: brew update && brew install gcc
 
     - name: Build
       run: ./build-Local.sh O
