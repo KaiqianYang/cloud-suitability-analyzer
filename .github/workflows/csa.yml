@@ -45,9 +45,9 @@ jobs:
 
 #    - name: install go-bindata
 #      run: brew update && brew install go-bindata
-
-    - name: install gcc
-      run: brew update && brew install gcc
+    -
+    - name: install go-bindata
+      run:go get -u github.com/jteeuwen/go-bindata/...
 
     - name: Build
       run: ./build-Local.sh O
