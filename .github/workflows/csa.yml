@@ -39,7 +39,7 @@ jobs:
       uses: actions/checkout@master
 
     - name: install go-bindata
-      run: brew install -y go-bindata
+      run: brew install go-bindata
 
     - name: install gcc
       run: brew install gcc
