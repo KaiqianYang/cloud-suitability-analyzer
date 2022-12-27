@@ -2,7 +2,7 @@ name: Go
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, add-azure-spring-app-rules ]
   pull_request:
     branches: [ master ]
 
