@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -ex
 
 echo "~~~> Requested OS builds..: $1"
 echo "~~~> Version..............: $2"
