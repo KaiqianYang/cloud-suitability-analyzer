@@ -8,28 +8,28 @@ on:
 
 jobs:
 
-#  buildWL:
-#    name: Build
-#    runs-on: ubuntu-latest
-#    steps:
-#
-#    - name: Check out code into the Go module directory
-#      uses: actions/checkout@master
-#
-#    - name: install go-bindata
-#      run: sudo apt update && sudo apt install -y go-bindata
-#
-#    - name: install windows compilers
-#      run: sudo apt update && sudo apt install -y gcc-multilib && sudo apt install -y gcc-mingw-w64
-#
-#    - name: Build
-#      run: ./build-Local.sh WL
-#
-#    - name: Upload artifacts
-#      uses: actions/upload-artifact@master
-#      with:
-#        name: buildFiles
-#        path: csa-app/exe
+  buildWL:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@master
+
+    - name: install go-bindata
+      run: sudo apt update && sudo apt install -y go-bindata
+
+    - name: install windows compilers
+      run: sudo apt update && sudo apt install -y gcc-multilib && sudo apt install -y gcc-mingw-w64
+
+    - name: Build
+      run: ./build-Local.sh WL
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@master
+      with:
+        name: buildFiles
+        path: csa-app/exe
 
   buildOnMacos:
     name: Build on macos
@@ -38,6 +38,7 @@ jobs:
     - name: Check out code into the Go module directory
       uses: actions/checkout@master
 
+    # macos-12 runner seems old go@1.17 make go-bindata install fail
     - name: install go-bindata
       run: brew update && sudo rm -rf /usr/local/opt/go@1.17 && brew install go-bindata
 
