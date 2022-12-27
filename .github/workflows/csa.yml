@@ -39,7 +39,7 @@ jobs:
       uses: actions/checkout@master
 
     - name: install go-bindata
-      run: brew update && brew uninstall go && sudo rm -rf /usr/local/opt/go@1.17 && brew install go-bindata
+      run: brew update && brew link -n go && sudo rm -rf /usr/local/opt/go@1.17 && brew install go-bindata
 
     - name: Build
       run: ./build-Local.sh O
