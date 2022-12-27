@@ -8,6 +8,8 @@ export VERSION=$2
 
 rm -rf csa-app/exe/* csa-app/frontend/build
 
+./install.sh
+
 #--- building web app
 ./buildWebUI.sh
 
