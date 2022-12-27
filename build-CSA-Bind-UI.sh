@@ -51,14 +51,14 @@ pushd ${WORKING_DIR}/csa-app > /dev/null
     echo "~~~> Building osx version"
     
     #env CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 go build -ldflags "${LD_FLAGS}" -o ${OUTPUT_DIR}/csa csa.go
-    GOOS=darwin GOARCH=amd64 go build -ldflags "${LD_FLAGS}" -o ${OUTPUT_DIR}/csa csa.go
+    GOOS=darwin GOARCH=amd64 CGO_ENABLED=1 go build -ldflags "${LD_FLAGS}" -o ${OUTPUT_DIR}/csa csa.go
     chmod +x ${OUTPUT_DIR}/csa
   fi
 
   if [[ "$OS" == *"$WINDOWS"* ]]; then
     echo "~~~> Building windows version"
     #env CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ GOOS=windows GOARCH=amd64 go build -ldflags "${LD_FLAGS}" -o ${OUTPUT_DIR}/csa.exe csa.go >&2
-    GOOS=windows GOARCH=amd64 go build -ldflags "${LD_FLAGS}" -o ${OUTPUT_DIR}/csa.exe csa.go
+    GOOS=windows GOARCH=amd64 CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ go build -ldflags "${LD_FLAGS}" -o ${OUTPUT_DIR}/csa.exe csa.go
     chmod +x ${OUTPUT_DIR}/csa.exe
   fi 
 
