@@ -45,7 +45,7 @@ jobs:
 
 #    - name: install go-bindata
 #      run: brew update && brew install go-bindata
-    -
+
     - name: install go-bindata
       run: go get -u github.com/jteeuwen/go-bindata/...
 
