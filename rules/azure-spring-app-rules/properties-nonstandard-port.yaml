@@ -10,4 +10,4 @@ tags:
   - value: azure spring apps
   - value: port
 patterns:
- - value: (^|\.|\s)server\.port
+ - value: (^|\s)server\.port
