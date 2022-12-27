@@ -19,6 +19,9 @@ jobs:
     - name: install go-bindata
       run: sudo apt update && sudo apt install -y go-bindata
 
+    - name: install gcc-multilib
+        run: sudo apt update && sudo apt install -y gcc-multilib
+
 
     - name: Build
       run: ./build-Local.sh OWL
