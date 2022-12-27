@@ -44,7 +44,7 @@ jobs:
         check-latest: true
 
     - name: install go-bindata
-      run: brew update && brew install go-bindata
+      run: brew update && brew install golang && brew install go-bindata
 
     - name: Build
       run: ./build-Local.sh O
