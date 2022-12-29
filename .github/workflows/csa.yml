@@ -2,7 +2,7 @@ name: Go
 
 on:
   push:
-    branches: [ master, build ]
+    branches: [ master, build, update-score-model ]
   pull_request:
     branches: [ master ]
 
