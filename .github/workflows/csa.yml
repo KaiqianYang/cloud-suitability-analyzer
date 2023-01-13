@@ -2,7 +2,7 @@ name: Go
 
 on:
   push:
-    branches: [ master, build, add-azure-spring-app-rules, add-negative-and-filenamepattern, update-score-model]
+    branches: [ build, add-azure-spring-app-rules, add-negative-and-filenamepattern, update-score-model]
   pull_request:
     branches: [ master ]
 
