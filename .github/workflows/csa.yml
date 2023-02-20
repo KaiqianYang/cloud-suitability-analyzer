@@ -2,29 +2,69 @@ name: Go
 
 on:
   push:
-    branches: [ add-azure-spring-app-rules ]
-  pull_request:
-    branches: [ add-azure-spring-app-rules ]
+    branches: [ build-private-preview-release ]
 
 jobs:
 
-  build:
+  buildW:
     name: Build
     runs-on: ubuntu-latest
     steps:
 
-    - name: Check out code into the Go module directory
-      uses: actions/checkout@v3
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@master
 
-    - name: Install Dependencies
-      run: sudo apt install go-bindata mingw-w64
-      
-    - name: Build
-      run: ./build-Local.sh OWL
-    
-    - name: Upload artifacts
-      uses: actions/upload-artifact@master
-      with:
-        name: buildFiles
-        path: csa-app/exe
+      - name: install go-bindata
+        run: sudo apt update && sudo apt install -y go-bindata
 
+      - name: install windows compilers
+        run: sudo apt update && sudo apt install -y gcc-multilib && sudo apt install -y gcc-mingw-w64
+
+      - name: Build
+        run: ./build-Local.sh W
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@master
+        with:
+          name: buildFiles
+          path: csa-app/exe
+
+  buildL:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@master
+
+      - name: install go-bindata
+        run: sudo apt update && sudo apt install -y go-bindata
+
+      - name: Build
+        run: ./build-Local.sh L
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@master
+        with:
+          name: buildlinux
+          path: csa-app/exe
+
+  buildOnMacos:
+    name: Build on macos
+    runs-on: macos-12
+    steps:
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@master
+
+      # macos-12 runner seems old go@1.17 make go-bindata install fail
+      - name: install go-bindata
+        run: brew update && sudo rm -rf /usr/local/opt/go@1.17 && brew install go-bindata
+
+      - name: Build
+        run: ./build-Local.sh O
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@master
+        with:
+          name: buildMacos
+          path: csa-app/exe
