@@ -3,9 +3,9 @@ filetype: $
 filenamepattern: ^build.gradle
 target: contents
 type: regex
-criticality: Critical
+criticality: Warn
 advice: The build.gradle does not have Spring Boot Gradle Plugin. It is needed to package executable jar.
-effort: 10
+effort: 4
 category: spring boot
 negative: true
 tags:

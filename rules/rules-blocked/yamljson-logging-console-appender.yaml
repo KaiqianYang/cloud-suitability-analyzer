@@ -4,6 +4,7 @@ filenamepattern: (log4j2?(-\w+)?\.yaml$|log4j2?(-\w+)?\.yml$|log4j2?(-\w+)?\.jso
 target: file
 type: yamlpath
 criticality: Warn
+effort: 5
 negative: true
 advice: Please enable console appender so that ASA can enable your logging
 category: logging
