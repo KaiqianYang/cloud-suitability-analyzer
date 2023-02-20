@@ -1,0 +1,15 @@
+name: maven-spring-boot-web
+filetype: xml$
+filenamepattern: ^pom.xml$
+target: file
+type: xpath
+criticality: Critical
+advice: The application does not have spring boot web packages. Azure Spring Apps only support valid Spring Boot long-running app.
+effort: 200
+category: spring boot
+negative: true
+tags:
+  - value: azure spring apps
+  - value: spring boot
+patterns:
+  - value: //*[artifactId="spring-boot-starter-web" or artifactId="spring-boot-starter-webflux" or artifactId="spring-boot-starter-undertow" or artifactId="spring-boot-starter-tomcat" or artifactId="spring-boot-starter-jetty" or artifactId="spring-web" or artifactId="spring-webflux"]

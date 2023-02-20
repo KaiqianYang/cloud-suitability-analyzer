@@ -1,0 +1,13 @@
+name: windows-file-path
+filetype: $
+target: line
+type: regex
+criticality: Critical
+advice: This file system path is Microsoft Windows platform dependent. It needs to be replaced with a Linux-style path
+effort: 4
+category: os
+tags:
+  - value: azure spring apps
+  - value: os
+patterns:
+  - value: .*[^\w][A-z]:([\\\/][^\n\t]+)+|(\\\\([^\\\,\n\t]+)\\\S+)+

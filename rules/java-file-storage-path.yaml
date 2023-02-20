@@ -1,0 +1,18 @@
+name: java-file-storage-path
+filetype: (java|properties|yaml|yml)
+target: line
+type: regex
+criticality: Warn
+advice: Any usage of the file system on the application will require reconfiguration https://learn.microsoft.com/en-us/azure/developer/java/migration/migrate-spring-cloud-to-azure-spring-apps?pivots=sc-standard-tier#determine-whether-and-how-the-file-system-is-used
+recipes:
+  - uri: https://learn.microsoft.com/en-us/azure/spring-apps/how-to-built-in-persistent-storage
+  - uri: https://learn.microsoft.com/en-us/azure/spring-apps/how-to-custom-persistent-storage
+effort: 6
+category: file storage
+tags:
+  - value: azure spring apps
+  - value: file storage
+patterns:
+  - value: file:(//.*)?/.+
+  - value: \.+\/[^\n\t]+
+  - value: \/home

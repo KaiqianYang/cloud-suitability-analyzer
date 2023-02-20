@@ -1,0 +1,18 @@
+name: logging-log4j2-yaml-json-file-appender
+filetype: yaml$|json$|jsn$
+target: file
+type: yamlpath
+criticality: Warn
+negative: true
+effort: 3
+advice: Replace file appender with console appender
+category: logging
+tags:
+  - value: azure spring apps
+  - value: logging
+  - value: log2file
+patterns:
+ - value: $[*]["appenders","Appenders"][?( @.File || @.file || @.appender[?(@.type=~/(?i)file/)])]
+ - value: $[*]["appenders","Appenders"]["Routing"]["Routes"]["Route"][?( @.File || @.file)]
+ - value: $[*]["appenders","Appenders"][?(@.RollingFile || @.rollingFile || @.appender[?(@.type=~/(?i)RollingFile/)])]
+ - value: $[*]["appenders","Appenders"]["Routing"]["Routes"]["Route"][?( @.RollingFile || @.rollingFile)]

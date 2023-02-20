@@ -1,0 +1,14 @@
+name: maven-package-ear
+filetype: xml$
+target: line
+type: contains
+category:  package
+advice: ASA does not support ear package
+effort: 100
+criticality: Warn
+tags:
+  - value: azure spring apps
+  - value: maven
+  - value: package
+patterns:
+  - value: <packaging>ear</packaging>

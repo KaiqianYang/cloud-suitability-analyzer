@@ -1,0 +1,19 @@
+name: logging-log4j2-xml-properties-file-appender
+filetype: xml$|properties$
+target: line
+type: regex
+criticality: Warn
+effort: 3
+advice: Replace file appender with console appender
+category: logging
+tags:
+  - value: azure spring apps
+  - value: logging
+  - value: log2file
+patterns:
+  - value: </File> # Concise xml Syntax
+  - value: </RollingFile> # Concise xml Syntax
+  - value: type(\s)*=(\s)*"File" # Strict XML Syntax
+  - value: type(\s)*=(\s)*"RollingFile" # Strict XML Syntax
+  - value: appender.rolling.type # properties (RollingFileAppender, a combination of both FileAppender and RollingPolicy)
+  - value: appender.file.type # properties 

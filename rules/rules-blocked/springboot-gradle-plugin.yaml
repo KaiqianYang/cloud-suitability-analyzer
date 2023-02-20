@@ -1,0 +1,15 @@
+name: springboot-gradle-plugin
+filetype: $
+filenamepattern: ^build.gradle
+target: contents
+type: regex
+criticality: Critical
+advice: The build.gradle does not have Spring Boot Gradle Plugin. It is needed to package executable jar.
+effort: 10
+category: spring boot
+negative: true
+tags:
+  - value: azure spring apps
+  - value: spring boot
+patterns:
+  - value: org.springframework.boot[^:]

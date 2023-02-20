@@ -1,0 +1,24 @@
+name: java-scheduled-job-import
+filetype: java$
+target: line
+type: regex
+criticality: Warn
+defaultpattern: ^.*import\s*%s.*
+advice: The application has scheduled jobs such as Quartz Scheduler tasks or cron jobs. 
+        Azure Spring App won't prevent you from deploying an application containing scheduled tasks internally.
+        However, if your application is scaled out, the same scheduled job may run more than once per scheduled period.
+        This situation can lead to unintended consequences.
+effort: 6
+category: scheduled job
+tags:
+  - value: azure spring apps
+  - value: scheduled job
+impact: file
+patterns:
+  - value: java\.util\.concurrent\.ScheduledExecutorService
+  - value: java\.util\.concurrent\.ScheduledThreadPoolExecutor
+  - value: java\.util\.concurrent\.ScheduledFuture
+  - value: org\.quartz
+  - value: org\.apache\.commons\.scheduler
+  - value: com\.google\.common\.util\.concurrent\.AbstractScheduledService
+  - value: com\.google\.common\.util\.concurrent\.ListeningScheduledExecutorService

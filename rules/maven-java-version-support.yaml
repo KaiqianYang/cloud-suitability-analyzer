@@ -1,0 +1,21 @@
+name: maven-java-version-support
+filetype: xml$
+target: contents
+type: xpath
+criticality: Warn
+advice: Only JAVA_8, JAVA_11, JAVA_17 are supported by ASA, we suggest you to migrate to above versions
+effort: 6
+category: java
+defaultpattern: //*[starts-with(java.version,"%s")]/java.version
+tags:
+  - value: azure spring apps
+  - value: java version
+patterns:
+  - value: 9
+  - value: 10
+  - value: 12
+  - value: 13
+  - value: 14
+  - value: 15
+  - value: 16
+  - value: 19

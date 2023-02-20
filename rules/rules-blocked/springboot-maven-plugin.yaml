@@ -1,0 +1,15 @@
+name: springboot-maven-plugin
+filetype: xml$
+target: file
+type: xpath
+criticality: Critical
+filenamepattern: ^pom.xml$
+advice: The pom.xml does not have spring-boot-maven-plugin. It is needed to package executable jar.
+effort: 10
+category: spring boot
+negative: true
+tags:
+  - value: azure spring apps
+  - value: spring boot
+patterns:
+  - value: //*[groupId="org.springframework.boot" and artifactId="spring-boot-maven-plugin"]

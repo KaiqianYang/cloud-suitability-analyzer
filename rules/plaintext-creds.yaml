@@ -1,14 +1,15 @@
 name: plaintext-creds
 filetype:
 target: line
-type: contains
-advice: never save passwords or login information in files
-effort: 11
-readiness: 9
+type: regex
+advice: Don't save passwords or login information in files. They are suggested to be stored in Azure Key Vault
+effort: 3
+criticality: Warn
 category: security
 tags:
-- value: security
+  - value: azure spring apps
+  - value: security
 patterns:
-- value: Password=
-- value: User=
-- value: User Id=
+  - value: Password(\s)*=
+  - value: User(\s)*=
+  - value: User(\s)*Id(\s)*=

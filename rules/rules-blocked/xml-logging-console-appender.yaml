@@ -1,0 +1,16 @@
+name: xml-logging-console-appender
+filetype: xml$
+target: contents
+type: regex
+negative: true
+filenamepattern: (log4j2?(-\w+)?\.xml$|logback(-\w+)?\.xml$)
+criticality: Warn
+advice: Please enable console appender so that ASA can enable your logging
+category: logging
+tags:
+  - value: azure spring apps
+  - value: logging
+patterns:
+ - value: (?i)(ConsoleAppender|type(\s)*=(\s)*"console"|</console>)
+
+ # https://logging.apache.org/log4j/2.x/manual/configuration.html

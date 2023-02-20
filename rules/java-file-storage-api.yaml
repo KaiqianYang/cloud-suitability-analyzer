@@ -1,0 +1,94 @@
+name: java-file-storage-api
+filetype: java$
+target: line
+type: regex
+criticality: Warn
+defaultpattern: ^.*[ .]%s[ (].*
+advice: The application uses Java APIs to read/write from the file system.
+        Any usage of the file system on the application will require reconfiguration https://learn.microsoft.com/en-us/azure/developer/java/migration/migrate-spring-cloud-to-azure-spring-apps?pivots=sc-standard-tier#determine-whether-and-how-the-file-system-is-used
+recipes:
+  - uri: https://learn.microsoft.com/en-us/azure/spring-apps/how-to-custom-persistent-storage
+effort: 6
+category: file storage
+tags:
+  - value: azure spring apps
+  - value: file storage
+patterns:
+  - value: getNextEntry
+  - value: putNextEntry
+  - value: canExecute
+  - value: canRead
+  - value: canWrite
+  - value: createNewFile
+  - value: getAbsoluteFile
+  - value: getFile
+  - value: getAbsolutePath
+  - value: getCanonicalFile
+  - value: getCanonicalPath
+  - value: getFreeSpace
+  - value: getTotalSpace
+  - value: getUsableSpace
+  - value: isDirectory
+  - value: isFile
+  - value: isHidden
+  - value: lastModified
+  - value: listFiles
+  - value: mkdir
+  - value: mkdirs
+  - value: renameTo
+  - value: setExecutable
+  - value: setLastModified
+  - value: setReadOnly
+  - value: setReadable
+  - value: setWritable
+  - value: FileDescriptor
+  - value: FileInputStream
+  - value: FileOutputStream
+  - value: FilePermission
+  - value: FileReader
+  - value: FileWriter
+  - value: LineNumberInputStream
+  - value: LineNumberReader
+  - value: RandomAccessFile  
+  # the rest are java nio
+  - value: BufferOverflowException
+  - value: BufferUnderflowException
+  - value: InvalidMarkException
+  - value: ReadOnlyBufferException
+  - value: FileSystemProvider
+  - value: GroupPrincipal
+  - value: UserPrincipal
+  - value: BasicFileAttributeView
+  - value: UserPrincipalLookupService
+  - value: BasicFileAttributeView
+  - value: BasicFileAttributes
+  - value: PosixFileAttributeView
+  - value: PosixFileAttributes
+  - value: PosixFilePermission
+  - value: PosixFilePermissions
+  - value: SocketChannel
+  - value: CharacterCodingException
+  - value: ServerSocketChannel
+  - value: SelectionKey
+  - value: CancelledKeyException
+  - value: DatagramChannel
+  - value: StandardOpenOption
+  - value: MappemodelyteBuffer
+  - value: ClosedChannelException
+  - value: StandardOpenOption
+  - value: AsynchronousChannelGroup
+  - value: AsynchronousFileChannel
+  - value: AsynchronousServerSocketChannel
+  - value: AsynchronousSocketChannel
+  - value: DatagramChannel
+  - value: FileChannel
+  - value: FileChannel.MapMode
+  - value: FileLock
+  - value: MembershipKey
+  - value: Pipe.SinkChannel
+  - value: Pipe.SourceChannel
+  - value: SelectableChannel
+  - value: SelectionKey
+  - value: Selector
+  - value: ServerSocketChannel
+  - value: SocketChannel

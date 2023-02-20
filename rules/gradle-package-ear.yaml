@@ -1,0 +1,13 @@
+name: gradle-package-ear
+filetype: gradle$|kts$
+target: line
+type: regex
+category:  package
+advice: ASA does not support ear package
+effort: 100
+criticality: Warn
+tags:
+  - value: azure spring apps
+  - value: package
+patterns:
+  - value: (^|\s)ear(\s|$)

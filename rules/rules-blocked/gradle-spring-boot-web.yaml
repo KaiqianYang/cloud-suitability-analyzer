@@ -1,0 +1,15 @@
+name: gradle-spring-boot-web
+filetype: $
+filenamepattern: ^build.gradle
+target: contents
+type: regex
+criticality: Critical
+advice: The application does not have spring boot web packages. Azure Spring Apps only support valid Spring Boot long-running app.
+effort: 200
+category: spring boot
+negative: true
+tags:
+  - value: azure spring apps
+  - value: spring boot
+patterns:
+  - value: spring-boot-starter-web|spring-boot-starter-webflux|spring-boot-starter-undertow|spring-boot-starter-tomcat|spring-boot-starter-jetty|spring-web|spring-webflux

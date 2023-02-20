@@ -1,0 +1,14 @@
+name: Default
+max-score: 10
+ranges:
+  - type: sloc
+    start: "0"
+    end: int.max
+    ranges:
+      - type: raw
+        start: int.min
+        end: int.max
+        outcome:
+          calculate: true
+          expression: max_score - log(10,raw_score)
+          recommendation: Migrate to Azure Spring Apps

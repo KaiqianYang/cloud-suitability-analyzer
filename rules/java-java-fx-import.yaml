@@ -2,13 +2,14 @@ name: java-java-fx-import
 filetype: java$
 target: line
 type: regex
+criticality: Critical
 effort: 100
-readiness: 100
 category: java-fx
 advice: Java-fx is not cloud compatible and requires the JRE on the remote device.
 recipes:
-defaultpattern: '^import\s*%s.*'
+defaultpattern: ^import\s*%s.*
 tags:
-- value: java-fx
+  - value: azure spring apps
+  - value: java-fx
 patterns:
-- value: javafx
+  - value: javafx
