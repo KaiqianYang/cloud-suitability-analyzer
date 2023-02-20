@@ -14,5 +14,3 @@ tags:
   - value: file storage
 patterns:
   - value: file:(//.*)?/.+
-  - value: \.+\/[^\n\t]+
-  - value: \/home
