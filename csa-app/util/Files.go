@@ -178,15 +178,40 @@ func (fu *FileUtil) CheckForArchive(path string) (finalTargetPath string, alias 
 		//Get DecompilePath
 		decompilePath := "./decompile"
 
-		file := GetFile(path)
-		WriteLog("Decompiling", "...   Filename: %s\n", file.Name)
-		if !IsPathUnder(decompilePath, file.FQN) {
-			fu.Decompile(file, decompilePath)
-			decompileDir := decompilePath + "/" + strings.Replace(filepath.Base(file.Name), filepath.Ext(file.Name), "", -1)
-			fu.UnzipJar(decompileDir, decompileDir)
-			return decompileDir, alias, true
+		//Target all files of type extension
+		if strings.Contains(path, "*.") {
+
+			files := fu.GetFilesWithExtension(filepath.Dir(path), filepath.Ext(path))
+			var alias string
+
+			for _, file := range files {
+				if len(alias) > 0 {
+					alias += "|" + file.Name
+				} else {
+					alias = file.Name
+				}
+
+				WriteLog("Decompiling", "...   Filename: %s\n", file.Name)
+				if !IsPathUnder(decompilePath, file.FQN) {
+					fu.Decompile(file, decompilePath)
+					decompileDir := decompilePath + "/" + strings.Replace(filepath.Base(file.Name), filepath.Ext(file.Name), "", -1)
+					fu.UnzipJar(decompileDir, decompileDir)
+					return decompilePath, alias, true
+				}
+			}
+
+		} else {
+			file := GetFile(path)
+			WriteLog("Decompiling", "...   Filename: %s\n", file.Name)
+			if !IsPathUnder(decompilePath, file.FQN) {
+				fu.Decompile(file, decompilePath)
+				decompileDir := decompilePath + "/" + strings.Replace(filepath.Base(file.Name), filepath.Ext(file.Name), "", -1)
+				fu.UnzipJar(decompileDir, decompileDir)
+				return decompilePath, alias, true
+			}
 		}
 
+		return decompilePath, alias, true
 	}
 
 	return path, alias, false
