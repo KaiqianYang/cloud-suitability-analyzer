@@ -6,31 +6,31 @@ on:
 
 jobs:
 
-  buildW:
-    name: Build
-    runs-on: ubuntu-latest
-    steps:
+  # buildW:
+  #   name: Build
+  #   runs-on: ubuntu-latest
+  #   steps:
 
-      - name: Check out code into the Go module directory
-        uses: actions/checkout@master
+  #     - name: Check out code into the Go module directory
+  #       uses: actions/checkout@master
 
-      - name: install go-bindata
-        run: sudo apt update && sudo apt install -y go-bindata
+  #     - name: install go-bindata
+  #       run: sudo apt update && sudo apt install -y go-bindata
 
-      - name: install windows compilers
-        run: sudo apt update && sudo apt install -y gcc-multilib && sudo apt install -y gcc-mingw-w64
+  #     - name: install windows compilers
+  #       run: sudo apt update && sudo apt install -y gcc-multilib && sudo apt install -y gcc-mingw-w64
 
-      - name: Build
-        run: ./build-Local.sh W
+  #     - name: Build
+  #       run: ./build-Local.sh W
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@master
-        with:
-          name: buildFiles
-          path: csa-app/exe
+  #     - name: Upload artifacts
+  #       uses: actions/upload-artifact@master
+  #       with:
+  #         name: buildFiles
+  #         path: csa-app/exe
 
   buildL:
-    name: Build
+    name: Build linux
     runs-on: ubuntu-latest
     steps:
 
@@ -49,22 +49,22 @@ jobs:
           name: buildlinux
           path: csa-app/exe
 
-  buildOnMacos:
-    name: Build on macos
-    runs-on: macos-12
-    steps:
-      - name: Check out code into the Go module directory
-        uses: actions/checkout@master
+  # buildOnMacos:
+  #   name: Build on macos
+  #   runs-on: macos-12
+  #   steps:
+  #     - name: Check out code into the Go module directory
+  #       uses: actions/checkout@master
 
-      # macos-12 runner seems old go@1.17 make go-bindata install fail
-      - name: install go-bindata
-        run: brew update && sudo rm -rf /usr/local/opt/go@1.17 && brew install go-bindata
+  #     # macos-12 runner seems old go@1.17 make go-bindata install fail
+  #     - name: install go-bindata
+  #       run: brew update && sudo rm -rf /usr/local/opt/go@1.17 && brew install go-bindata
 
-      - name: Build
-        run: ./build-Local.sh O
+  #     - name: Build
+  #       run: ./build-Local.sh O
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@master
-        with:
-          name: buildMacos
-          path: csa-app/exe
+  #     - name: Upload artifacts
+  #       uses: actions/upload-artifact@master
+  #       with:
+  #         name: buildMacos
+  #         path: csa-app/exe

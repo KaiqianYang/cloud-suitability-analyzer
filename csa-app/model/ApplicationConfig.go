@@ -241,21 +241,9 @@ func (c *ApplicationConfig) checkForAndPrepareArchiveTarget(path string) (finalT
 func (c *ApplicationConfig) gatherFilesOnPath(targetPath string) error {
 
 	//Check for Archives...jar,war,ear
-	finalTargetPath, _ := c.checkForAndPrepareArchiveTarget(targetPath)
+	c.checkForAndPrepareArchiveTarget(targetPath)
 
-	return filepath.Walk(finalTargetPath, func(path string, f os.FileInfo, err error) error {
-		if err == nil {
-			if f.IsDir() {
-				if c.FileUtil.DirIsExcluded(f.Name()) {
-					return filepath.SkipDir
-				}
-			} else {
-				c.AddFile(f, path)
-			}
-
-		}
-		return nil
-	})
+	return nil
 }
 
 func (c *ApplicationConfig) CheckForLocalAppConfig() {
