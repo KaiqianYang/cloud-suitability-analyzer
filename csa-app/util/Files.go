@@ -167,7 +167,7 @@ func (fu *FileUtil) CheckForArchive(path string) (finalTargetPath string, alias 
 		WriteLog("Decompiling", "...\n")
 
 		//Get DecompilePath
-		decompilePath := *TmpDirPath + "/decompile"
+		decompilePath := "./decompile"
 		if *DecompileDir != "" {
 			if !Exists(*DecompileDir) {
 				CreateDirIfNotExist(*DecompileDir)

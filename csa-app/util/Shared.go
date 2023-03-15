@@ -25,7 +25,7 @@ var (
 	DbDir             = App.Flag("database-dir", "directory path where database can be found or created. (defaults to csa executable directory)").String()
 	DBDriverFlags     = App.Flag("db-driver-flags", "flags to configure the database driver (Default: sqlite: "+Sqlite_driverFlags+" postgres: "+Postgres_driverFlags).String()
 	ReportsFlag       = App.Flag("report", "comma delimited list of report(s) to run. (for example \"-r1,3,4\". 0=All)").Default("0").Short('r').String()
-	TmpDirPath        = "./tmp"
+	TmpDirPath        = App.Flag("temp-dir", "The root path where files created by csa will be placed. Defaults to OS specific temp path/run-id").Short('t').String()
 
 	//Get Build Info
 	BuildInfoCmd = App.Command("info", "Get full build details of this csa executable")
