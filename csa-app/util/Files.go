@@ -184,9 +184,9 @@ func (fu *FileUtil) CheckForArchive(path string) (finalTargetPath string, alias 
 			fu.Decompile(file, decompilePath)
 			decompileDir := decompilePath + "/" + strings.Replace(filepath.Base(file.Name), filepath.Ext(file.Name), "", -1)
 			fu.UnzipJar(decompileDir, decompileDir)
+			return decompileDir, alias, true
 		}
 
-		return decompilePath, alias, true
 	}
 
 	return path, alias, false

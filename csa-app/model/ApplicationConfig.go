@@ -243,9 +243,21 @@ func (c *ApplicationConfig) gatherFilesOnPath(targetPath string) error {
 	WriteLog("Checking", "...   targetPath: %s\n", targetPath)
 
 	//Check for Archives...jar,war,ear
-	c.checkForAndPrepareArchiveTarget(targetPath)
+	finalTargetPath, _ := c.checkForAndPrepareArchiveTarget(targetPath)
 
-	return nil
+	return filepath.Walk(finalTargetPath, func(path string, f os.FileInfo, err error) error {
+		if err == nil {
+			if f.IsDir() {
+				if c.FileUtil.DirIsExcluded(f.Name()) {
+					return filepath.SkipDir
+				}
+			} else if !c.FileUtil.IsDecompilableArchive(path) {
+				c.AddFile(f, path)
+			}
+
+		}
+		return nil
+	})
 }
 
 func (c *ApplicationConfig) CheckForLocalAppConfig() {
