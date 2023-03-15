@@ -6,8 +6,11 @@
 package util
 
 import (
+	"archive/zip"
 	"fmt"
+	"io"
 	"io/ioutil"
+	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -20,14 +23,14 @@ import (
 )
 
 type FileInfo struct {
-	Dir        string
-	FQN        string
-	Name       string
-	Ext        string
-	TargetPath string
-	Comment    string
-	Exists     bool
-	MatchedRules   map[string]int
+	Dir          string
+	FQN          string
+	Name         string
+	Ext          string
+	TargetPath   string
+	Comment      string
+	Exists       bool
+	MatchedRules map[string]int
 	sync.Mutex
 }
 
@@ -61,22 +64,20 @@ type FileUtil struct {
 	useDecompileRegex             bool
 }
 
-
 /***********************************************************************************************************************
 														FILEUTIL API
 ***********************************************************************************************************************/
 
-
-func NewFileInfo(dir string, fqn string, name string, ext string, targetpath string, comments string, exists bool) *FileInfo{
+func NewFileInfo(dir string, fqn string, name string, ext string, targetpath string, comments string, exists bool) *FileInfo {
 	return &FileInfo{
-		Dir:dir,
-		FQN:fqn,
-		Name:name,
-		Ext:ext,
-		TargetPath:targetpath,
-		Comment:comments,
-		Exists:exists,
-		MatchedRules:make(map[string]int),
+		Dir:          dir,
+		FQN:          fqn,
+		Name:         name,
+		Ext:          ext,
+		TargetPath:   targetpath,
+		Comment:      comments,
+		Exists:       exists,
+		MatchedRules: make(map[string]int),
 	}
 }
 
@@ -160,6 +161,14 @@ func (fu *FileUtil) IsDecompilableArchive(target string) (isArchive bool) {
 	return fu.archiveRegex.MatchString(target)
 }
 
+func IsPathUnder(basePath string, targetPath string) bool {
+	relPath, err := filepath.Rel(basePath, targetPath)
+	if err != nil {
+		return false
+	}
+	return !filepath.IsAbs(relPath) && relPath != ".." && !strings.HasPrefix(relPath, ".."+string(filepath.Separator))
+}
+
 func (fu *FileUtil) CheckForArchive(path string) (finalTargetPath string, alias string, decompiled bool) {
 
 	if fu.IsDecompilableArchive(path) {
@@ -168,12 +177,6 @@ func (fu *FileUtil) CheckForArchive(path string) (finalTargetPath string, alias 
 
 		//Get DecompilePath
 		decompilePath := "./decompile"
-		if *DecompileDir != "" {
-			if !Exists(*DecompileDir) {
-				CreateDirIfNotExist(*DecompileDir)
-				decompilePath = *DecompileDir
-			}
-		}
 
 		//Target all files of type extension
 		if strings.Contains(path, "*.") {
@@ -189,13 +192,21 @@ func (fu *FileUtil) CheckForArchive(path string) (finalTargetPath string, alias 
 				}
 
 				WriteLog("Decompiling", "...   Filename: %s\n", file.Name)
-				fu.Decompile(file, decompilePath)
+				if IsPathUnder(decompilePath, file.FQN) {
+					UnzipJar(file.FQN, decompilePath)
+				} else {
+					fu.Decompile(file, decompilePath)
+				}
 			}
 
 		} else {
 			file := GetFile(path)
 			WriteLog("Decompiling", "...   Filename: %s\n", file.Name)
-			fu.Decompile(file, decompilePath)
+			if IsPathUnder(decompilePath, file.FQN) {
+				UnzipJar(file.FQN, decompilePath)
+			} else {
+				fu.Decompile(file, decompilePath)
+			}
 		}
 
 		return decompilePath, alias, true
@@ -234,7 +245,7 @@ func (fu *FileUtil) GetFileList(searchDir string, expression string) (files []Fi
 					ext := filepath.Ext(f.Name())
 					domainPath := strings.Replace(path, searchDir, "", -1)
 					domainPath = strings.Replace(domainPath, f.Name(), "", -1)
-					files = append(files, *NewFileInfo(domain,path,f.Name(),ext,domainPath,"",true))
+					files = append(files, *NewFileInfo(domain, path, f.Name(), ext, domainPath, "", true))
 				}
 
 			}
@@ -260,7 +271,7 @@ func (fu *FileUtil) GetFilesWithExtension(searchDir string, extension string) (m
 			domain := "TBD"
 			matchingFiles = append(matchingFiles, *NewFileInfo(
 				domain,
-				searchDir + PathSeparator + file.Name(),
+				searchDir+PathSeparator+file.Name(),
 				file.Name(),
 				extension,
 				searchDir,
@@ -270,6 +281,51 @@ func (fu *FileUtil) GetFilesWithExtension(searchDir string, extension string) (m
 	}
 
 	return
+}
+
+func UnzipJar(jarPath string, outputPath string) error {
+	r, err := zip.OpenReader(jarPath)
+	if err != nil {
+		return err
+	}
+	defer r.Close()
+
+	for _, f := range r.File {
+		rc, err := f.Open()
+		if err != nil {
+			return err
+		}
+		defer rc.Close()
+
+		fpath := filepath.Join(outputPath, f.Name)
+		if f.FileInfo().IsDir() {
+			os.MkdirAll(fpath, os.ModePerm)
+		} else {
+			var fdir string
+			if lastIndex := strings.LastIndex(fpath, string(os.PathSeparator)); lastIndex > -1 {
+				fdir = fpath[:lastIndex]
+			}
+
+			err = os.MkdirAll(fdir, os.ModePerm)
+			if err != nil {
+				log.Fatal(err)
+				return err
+			}
+			f, err := os.OpenFile(
+				fpath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, f.Mode())
+			if err != nil {
+				return err
+			}
+			defer f.Close()
+
+			_, err = io.Copy(f, rc)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	return nil
 }
 
 func (fu *FileUtil) Decompile(target FileInfo, basePath string) {
