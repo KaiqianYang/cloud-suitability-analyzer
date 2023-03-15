@@ -240,6 +240,8 @@ func (c *ApplicationConfig) checkForAndPrepareArchiveTarget(path string) (finalT
 
 func (c *ApplicationConfig) gatherFilesOnPath(targetPath string) error {
 
+	WriteLog("Checking", "...   targetPath: %s\n", targetPath)
+
 	//Check for Archives...jar,war,ear
 	c.checkForAndPrepareArchiveTarget(targetPath)
 
