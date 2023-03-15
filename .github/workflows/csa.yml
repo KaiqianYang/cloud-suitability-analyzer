@@ -49,22 +49,22 @@ jobs:
           name: buildlinux
           path: csa-app/exe
 
-  # buildOnMacos:
-  #   name: Build on macos
-  #   runs-on: macos-12
-  #   steps:
-  #     - name: Check out code into the Go module directory
-  #       uses: actions/checkout@master
+  buildOnMacos:
+    name: Build on macos
+    runs-on: macos-12
+    steps:
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@master
 
-  #     # macos-12 runner seems old go@1.17 make go-bindata install fail
-  #     - name: install go-bindata
-  #       run: brew update && sudo rm -rf /usr/local/opt/go@1.17 && brew install go-bindata
+      # macos-12 runner seems old go@1.17 make go-bindata install fail
+      - name: install go-bindata
+        run: brew update && sudo rm -rf /usr/local/opt/go@1.17 && brew install go-bindata
 
-  #     - name: Build
-  #       run: ./build-Local.sh O
+      - name: Build
+        run: ./build-Local.sh O
 
-  #     - name: Upload artifacts
-  #       uses: actions/upload-artifact@master
-  #       with:
-  #         name: buildMacos
-  #         path: csa-app/exe
+      - name: Upload artifacts
+        uses: actions/upload-artifact@master
+        with:
+          name: buildMacos
+          path: csa-app/exe
