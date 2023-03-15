@@ -176,7 +176,13 @@ func (fu *FileUtil) CheckForArchive(path string) (finalTargetPath string, alias 
 		WriteLog("Decompiling", "...\n")
 
 		//Get DecompilePath
-		decompilePath := "./decompile"
+		decompilePath := *TmpDirPath + "/decompile"
+		if *DecompileDir != "" {
+			if !Exists(*DecompileDir) {
+				CreateDirIfNotExist(*DecompileDir)
+				decompilePath = *DecompileDir
+			}
+		}
 
 		//Target all files of type extension
 		if strings.Contains(path, "*.") {
@@ -195,7 +201,7 @@ func (fu *FileUtil) CheckForArchive(path string) (finalTargetPath string, alias 
 				if !IsPathUnder(decompilePath, file.FQN) {
 					fu.Decompile(file, decompilePath)
 					decompileDir := decompilePath + "/" + strings.Replace(filepath.Base(file.Name), filepath.Ext(file.Name), "", -1)
-					fu.UnzipJar(decompileDir, decompileDir)
+					fu.UnzipJar(file.FQN, decompileDir)
 					return decompilePath, alias, true
 				}
 			}
@@ -206,7 +212,7 @@ func (fu *FileUtil) CheckForArchive(path string) (finalTargetPath string, alias 
 			if !IsPathUnder(decompilePath, file.FQN) {
 				fu.Decompile(file, decompilePath)
 				decompileDir := decompilePath + "/" + strings.Replace(filepath.Base(file.Name), filepath.Ext(file.Name), "", -1)
-				fu.UnzipJar(decompileDir, decompileDir)
+				fu.UnzipJar(file.FQN, decompileDir)
 				return decompilePath, alias, true
 			}
 		}
@@ -285,49 +291,46 @@ func (fu *FileUtil) GetFilesWithExtension(searchDir string, extension string) (m
 	return
 }
 
-func (fu *FileUtil) UnzipJar(jarParentPath string, outputPath string) error {
-	files := fu.GetFilesWithExtension(filepath.Dir(jarParentPath), "jar")
+func (fu *FileUtil) UnzipJar(jarPath string, outputPath string) error {
 
-	for _, file := range files {
-		WriteLog("Unzipping jar", "...   Filename: %s\n", file.Name)
-		r, err := zip.OpenReader(file.FQN)
+	WriteLog("Unzipping jar", "...   File: %s\n", jarPath)
+	r, err := zip.OpenReader(jarPath)
+	if err != nil {
+		return err
+	}
+	defer r.Close()
+
+	for _, f := range r.File {
+		rc, err := f.Open()
 		if err != nil {
 			return err
 		}
-		defer r.Close()
+		defer rc.Close()
 
-		for _, f := range r.File {
-			rc, err := f.Open()
+		fpath := filepath.Join(outputPath, f.Name)
+		if f.FileInfo().IsDir() {
+			os.MkdirAll(fpath, os.ModePerm)
+		} else {
+			var fdir string
+			if lastIndex := strings.LastIndex(fpath, string(os.PathSeparator)); lastIndex > -1 {
+				fdir = fpath[:lastIndex]
+			}
+
+			err = os.MkdirAll(fdir, os.ModePerm)
+			if err != nil {
+				log.Fatal(err)
+				return err
+			}
+			f, err := os.OpenFile(
+				fpath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, f.Mode())
 			if err != nil {
 				return err
 			}
-			defer rc.Close()
+			defer f.Close()
 
-			fpath := filepath.Join(outputPath, f.Name)
-			if f.FileInfo().IsDir() {
-				os.MkdirAll(fpath, os.ModePerm)
-			} else {
-				var fdir string
-				if lastIndex := strings.LastIndex(fpath, string(os.PathSeparator)); lastIndex > -1 {
-					fdir = fpath[:lastIndex]
-				}
-
-				err = os.MkdirAll(fdir, os.ModePerm)
-				if err != nil {
-					log.Fatal(err)
-					return err
-				}
-				f, err := os.OpenFile(
-					fpath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, f.Mode())
-				if err != nil {
-					return err
-				}
-				defer f.Close()
-
-				_, err = io.Copy(f, rc)
-				if err != nil {
-					return err
-				}
+			_, err = io.Copy(f, rc)
+			if err != nil {
+				return err
 			}
 		}
 	}
