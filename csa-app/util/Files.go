@@ -372,15 +372,15 @@ func (fu *FileUtil) Decompile(target FileInfo, basePath string) {
 		fmt.Printf("Decompile Cmd Output => %s\n", output)
 	}
 
-	exec.Command("cd", decompileDir).Run()
 	jarPath := target.Name
 	fmt.Printf("Unzipping [%s]... to [%s]\n", decompileDir+"/"+jarPath, decompileDir)
 	// jar -xf my_file.jar dir1 dir2
 	unzipCmd := exec.Command("jar", "xf", jarPath, "META-INF", "BOOT-INF")
+	unzipCmd.Dir = decompileDir
 	unzipOutput, err := unzipCmd.CombinedOutput()
 
 	if err != nil {
-		App.Fatalf("Unzip of %s failed!\nError-Details: %s\n%s\n", jarPath, err, unzipOutput)
+		App.Fatalf("Unzip of %s failed!\nError-Details: extract jar command working dir [%s], %s\n%s\n", jarPath, decompileDir, err, unzipOutput)
 	}
 
 	// if *Verbose {
