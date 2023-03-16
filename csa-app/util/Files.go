@@ -176,9 +176,9 @@ func (fu *FileUtil) CheckForArchive(path string) (finalTargetPath string, alias 
 		WriteLog("Decompiling", "...\n")
 
 		//Get DecompilePath
-		decompilePath := *TmpDirPath + "/decompile"
+		decompilePath := "/decompile"
 		if *DecompileDir != "" {
-			if !Exists(*DecompileDir) {
+			if Exists(*DecompileDir) {
 				CreateDirIfNotExist(*DecompileDir)
 				decompilePath = *DecompileDir
 			}
@@ -510,7 +510,7 @@ func getDecompilerPath() string {
 	//Determine Decompiler availability
 	fernFlowerPath := fmt.Sprintf("%s/fernflower.jar", fernPath)
 
-	if !Exists(fernFlowerPath) {
+	if Exists(fernFlowerPath) {
 		App.Errorf("%s\n", fmt.Sprintf("Fernflower not installed or found at [%s]", fernFlowerPath))
 		App.Usage(os.Args)
 		os.Exit(1)
