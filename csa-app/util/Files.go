@@ -178,8 +178,10 @@ func (fu *FileUtil) CheckForArchive(path string) (finalTargetPath string, alias 
 		//Get DecompilePath
 		decompilePath := "/decompile"
 		if *DecompileDir != "" {
+			fmt.Printf("Loading decompileDir...\n")
 			if _, err := CreateDirIfNotExist(*DecompileDir); err != nil {
 				decompilePath = *DecompileDir
+				fmt.Printf("Loaded decompileDir...\n")
 			} else {
 				fmt.Printf("Loading decompileDir error, detail:%v...\n", err)
 			}
@@ -368,11 +370,11 @@ func (fu *FileUtil) Decompile(target FileInfo, basePath string) {
 		fmt.Printf("Decompile Cmd Output => %s\n", output)
 	}
 
-	jarPath := decompileDir + "/" + target.Name
-
-	fmt.Printf("Unzipping [%s]... to [%s]\n", jarPath, decompileDir)
-	// jar -xf my_file.jar -C my_directory dir1 dir2
-	unzipCmd := exec.Command("jar", "xf", jarPath, "-C", decompileDir, "META-INF", "BOOT-INF")
+	exec.Command("cd", decompileDir).Run()
+	jarPath := target.Name
+	fmt.Printf("Unzipping [%s]... to [%s]\n", decompileDir+"/"+jarPath, decompileDir)
+	// jar -xf my_file.jar dir1 dir2
+	unzipCmd := exec.Command("jar", "xf", jarPath, "META-INF", "BOOT-INF")
 	unzipOutput, err := unzipCmd.CombinedOutput()
 
 	if err != nil {
