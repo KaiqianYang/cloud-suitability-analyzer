@@ -6,11 +6,8 @@
 package util
 
 import (
-	"archive/zip"
 	"fmt"
-	"io"
 	"io/ioutil"
-	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -176,11 +173,11 @@ func (fu *FileUtil) CheckForArchive(path string) (finalTargetPath string, alias 
 		WriteLog("Begin Decompiling", "...\n")
 
 		//Get DecompilePath
-		decompilePath := "/decompile"
+		decompilePath := *TmpDirPath + "/decompile"
 		if *DecompileDir != "" {
 			fmt.Printf("Loading decompileDir...\n")
 			if _, err := CreateDirIfNotExist(*DecompileDir); err == nil {
-				decompilePath = *DecompileDir
+				decompilePath = *DecompileDir + "/decompile"
 				fmt.Printf("Loaded decompileDir...\n")
 			} else {
 				fmt.Printf("Loading decompileDir error, detail:%v...\n", err)
@@ -292,53 +289,6 @@ func (fu *FileUtil) GetFilesWithExtension(searchDir string, extension string) (m
 	}
 
 	return
-}
-
-func (fu *FileUtil) UnzipJar(jarPath string, outputPath string) error {
-
-	WriteLog("Unzipping jar", "...   File: %s\n", jarPath)
-	r, err := zip.OpenReader(jarPath)
-	if err != nil {
-		return err
-	}
-	defer r.Close()
-
-	for _, f := range r.File {
-		rc, err := f.Open()
-		if err != nil {
-			return err
-		}
-		defer rc.Close()
-
-		fpath := filepath.Join(outputPath, f.Name)
-		if f.FileInfo().IsDir() {
-			os.MkdirAll(fpath, os.ModePerm)
-		} else {
-			var fdir string
-			if lastIndex := strings.LastIndex(fpath, string(os.PathSeparator)); lastIndex > -1 {
-				fdir = fpath[:lastIndex]
-			}
-
-			err = os.MkdirAll(fdir, os.ModePerm)
-			if err != nil {
-				log.Fatal(err)
-				return err
-			}
-			f, err := os.OpenFile(
-				fpath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, f.Mode())
-			if err != nil {
-				return err
-			}
-			defer f.Close()
-
-			_, err = io.Copy(f, rc)
-			if err != nil {
-				return err
-			}
-		}
-	}
-
-	return nil
 }
 
 func (fu *FileUtil) Decompile(target FileInfo, basePath string) {
