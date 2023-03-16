@@ -179,7 +179,7 @@ func (fu *FileUtil) CheckForArchive(path string) (finalTargetPath string, alias 
 		decompilePath := "/decompile"
 		if *DecompileDir != "" {
 			fmt.Printf("Loading decompileDir...\n")
-			if _, err := CreateDirIfNotExist(*DecompileDir); err != nil {
+			if _, err := CreateDirIfNotExist(*DecompileDir); err == nil {
 				decompilePath = *DecompileDir
 				fmt.Printf("Loaded decompileDir...\n")
 			} else {
@@ -353,8 +353,10 @@ func (fu *FileUtil) Decompile(target FileInfo, basePath string) {
 	decompileDir := basePath + "/" + filePath
 	exists, err := CreateDirIfNotExist(decompileDir)
 	if exists {
-		//Already or in process of decompiling this jar...
+		fmt.Printf("Already or in process of decompiling this jar...")
 		return
+	} else if err != nil {
+		fmt.Printf("Decompile failed! decompileDir [%s] error ... Error-Details: %v", decompileDir, err)
 	}
 
 	fmt.Printf("Decompiling [%s]...\n", target.Name)
