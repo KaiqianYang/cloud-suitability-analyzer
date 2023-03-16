@@ -173,13 +173,15 @@ func (fu *FileUtil) CheckForArchive(path string) (finalTargetPath string, alias 
 
 	if fu.IsDecompilableArchive(path) {
 
-		WriteLog("Decompiling", "...\n")
+		WriteLog("Begin Decompiling", "...\n")
 
 		//Get DecompilePath
 		decompilePath := "/decompile"
 		if *DecompileDir != "" {
 			if _, err := CreateDirIfNotExist(*DecompileDir); err != nil {
 				decompilePath = *DecompileDir
+			} else {
+				fmt.Printf("Loading decompileDir error, detail:%v...\n", err)
 			}
 		}
 
@@ -196,22 +198,22 @@ func (fu *FileUtil) CheckForArchive(path string) (finalTargetPath string, alias 
 					alias = file.Name
 				}
 
-				WriteLog("Decompiling", "...   Filename: %s\n", file.Name)
+				fmt.Printf("Real Decompiling, ...   Filename: %s\n", file.Name)
 				if !IsPathUnder(decompilePath, file.FQN) {
 					fu.Decompile(file, decompilePath)
-					decompileDir := decompilePath + "/" + strings.Replace(filepath.Base(file.Name), filepath.Ext(file.Name), "", -1)
-					fu.UnzipJar(file.FQN, decompileDir)
+					// decompileDir := decompilePath + "/" + strings.Replace(filepath.Base(file.Name), filepath.Ext(file.Name), "", -1)
+					// fu.UnzipJar(file.FQN, decompileDir)
 					return decompilePath, alias, true
 				}
 			}
 
 		} else {
 			file := GetFile(path)
-			WriteLog("Decompiling", "...   Filename: %s\n", file.Name)
+			fmt.Printf("Real Decompiling, ...   Filename: %s\n", file.Name)
 			if !IsPathUnder(decompilePath, file.FQN) {
 				fu.Decompile(file, decompilePath)
-				decompileDir := decompilePath + "/" + strings.Replace(filepath.Base(file.Name), filepath.Ext(file.Name), "", -1)
-				fu.UnzipJar(file.FQN, decompileDir)
+				// decompileDir := decompilePath + "/" + strings.Replace(filepath.Base(file.Name), filepath.Ext(file.Name), "", -1)
+				// fu.UnzipJar(file.FQN, decompileDir)
 				return decompilePath, alias, true
 			}
 		}
@@ -364,6 +366,21 @@ func (fu *FileUtil) Decompile(target FileInfo, basePath string) {
 
 	if *Verbose {
 		fmt.Printf("Decompile Cmd Output => %s\n", output)
+	}
+
+	jarPath := decompileDir + "/" + target.Name
+
+	fmt.Printf("Unzipping [%s]...\n", jarPath)
+	// jar -xf my_file.jar -C my_directory dir1 dir2
+	unzipCmd := exec.Command("jar", "-xf", jarPath, "-C", decompileDir, "META-INF", "BOOT-INF")
+	unzipOutput, err := unzipCmd.CombinedOutput()
+
+	if err != nil {
+		App.Fatalf("Unzip of %s failed!\nError-Details: %s\n%s\n", jarPath, err, unzipOutput)
+	}
+
+	if *Verbose {
+		fmt.Printf("Unzip Cmd Output => %s\n", unzipOutput)
 	}
 
 	//decompiledJarPath := fmt.Sprintf("%s/%s", decompileDir, filepath.Base(target.Name))
