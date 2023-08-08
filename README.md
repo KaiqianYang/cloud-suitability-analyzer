@@ -2,8 +2,12 @@
 
 # Latest Additions
 
-We have recently added call graph documentation for all `Go`
-code. See `Appendix A` in the [user manual](doc/CSA-UserManual.md). Also, you will find a table of package names and their descriptions. Call graphs were created by [go-calvis](https://github.com/ofabry/go-callvis). Instructions for using `go-callvis` are [here](https://github.com/ofabry/go-callvis). This is an excellent way to become more familiar with the code. From the `./go` simply enter `go-callvis csa.go` . This will bring up an interactive code exploration tool.
+<b>New Features:</b>
+
+- [Exclude Patterns](https://github.com/vmware-tanzu/cloud-suitability-analyzer/blob/master/doc/CSA-UserManual.md#rules) - To help with fighting false positives
+- [Profiles](https://github.com/vmware-tanzu/cloud-suitability-analyzer/blob/master/doc/CSA-UserManual.md#rules) - To help select what type of rules to be used during scanning
+- [Rule Testing Framework](https://github.com/vmware-tanzu/cloud-suitability-analyzer/blob/master/doc/CSA-UserManual.md#rule-testing-framework) - To help with testing CSA rules against real code samples
+- [Generate HTML and CSV Finding Reports](https://github.com/vmware-tanzu/cloud-suitability-analyzer/blob/master/doc/CSA-UserManual.md#generate-html-and-csv-reports) - Generate HTML and CSV Reports that can be leveraged into a CI pipeline
 
 # Backlog/Feature requests
 
@@ -73,19 +77,47 @@ Clone the repo into your the directory of your choice.
 
 ### Build & Run
 
-**Run the build script**
+## Generating all binaries from your MACOS
 
-Make sure your in the root directory of your project and run the build script
 ```
-$> ./buildDocker.sh [executable type] or buildDocker.ps1
+> ./build.sh
 ```
 
-**Executable Type Options**
+Executable will be generated here:
 ```
-   O     creates a OSX executable
-   L     creates a Linux executable
-   W     creates a Windows executable
-   OWL   builds all three
+=> csa-app/dist/csa
+=> csa-app/dist/csa-l
+=> csa-app/dist/csa.exe
+```
+
+## Generating LINUX & WINDOWS binaries from your LINUX (DEBIAN) OS
+
+### 1. Docker Option
+
+Release builds containing all required GO dependencies can be generated using a docker build
+
+1. Run Docker Build
+
+```
+$> docker build -f build-Dockerfile -t csa-release:latest .
+```
+
+2. Generate executables
+
+```
+$> docker run -v ${PWD}:/app -e VERSION=v3.2.10-rc1 csa-release:latest
+```
+
+
+### 2. Using goreleaser
+```
+> ./build.sh
+```
+
+```
+Executable will be generated here 
+=> csa-app/dist/csa-l
+=> csa-app/dist/csa.exe
 ```
 
 **Verify docker created directory has correct ownership**
@@ -95,7 +127,28 @@ $> sudo chown -R $USER:`id -g -n $USER` $WORKING_DIR/go/exe
 
 **Check that the exe runs**
 
-The executable(s) can be found in  `<project root dir>/go/exe` directory
+The executable(s) can be found in  `<project root dir>/csa-app/exe` directory
+
+# Create release builds on Mac
+
+To create the release build do the following:
+* Tag release 
+
+  ```
+  git tag <tag-name>
+  ```
+
+* Execute 
+  
+  ```
+  ./build.sh -r
+  ```
+
+* Push the tag out
+  
+  ```
+  git push --tags
+  ```
 
 # Documentation
 

@@ -20,6 +20,7 @@ import (
 )
 
 func BootStrapRules(rulesdir string, templatesDir string) (rules []model.Rule, err error) {
+	fmt.Print("BOOTSTRAP!!!!!")
 	rules, err = GetAllResourcesBasedRules(rulesdir)
 
 	if err != nil {
@@ -155,6 +156,26 @@ func DeleteTags(tags []model.Tag) {
 			"Import Rules",
 			fmt.Sprintf("Failed Deleting Tag [%s]", tag.Value),
 			database.Delete(&tag).Error)
+	}
+}
+
+func DeleteProfiles(profiles []model.Profile) {
+
+	for _, profile := range profiles {
+		CheckDBError(false,
+			"Import Rules",
+			fmt.Sprintf("Failed Deleting Profile [%s]", profile.Value),
+			database.Delete(&profile).Error)
+	}
+}
+
+func DeleteExcludePatterns(excludePatterns []model.ExcludePattern) {
+
+	for _, excludePattern := range excludePatterns {
+		CheckDBError(false,
+			"Import Rules",
+			fmt.Sprintf("Failed Deleting Exclude Pattern [%s]", excludePattern.Value),
+			database.Delete(&excludePattern).Error)
 	}
 }
 

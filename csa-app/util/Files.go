@@ -405,7 +405,7 @@ func (f *FileInfo) GetCleanedExt() string {
 
 	if f.Ext == "" {
 		//We have a file without an extension
-		return ""
+		return f.Name
 	}
 
 	if len(f.Ext) > 1 && strings.HasPrefix(f.Ext, ".") {

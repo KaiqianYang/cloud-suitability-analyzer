@@ -5,7 +5,7 @@
 package model
 
 //Created By BootstrapBinsTemplate.txt found under go/resources folder
-//Created @ 2023-01-19 16:42:50.931455 -0500 EST m=+0.666463355
+//Created @ 2023-07-26 11:34:37.862218 -0500 CDT m=+0.349733343
 
 func BootstrapBins() []Bin {
     var BootstrapBins = []Bin{
@@ -32,7 +32,7 @@ func BootstrapBins() []Bin {
         
             { Name: "BOOT",
             Tags:
-            []*BinTag{  { Name: "cdi", Type: 1, Action: "OR", },  { Name: "ejb", Type: 1, Action: "OR", },  { Name: "jax-ws", Type: 1, Action: "OR", },  { Name: "jsf", Type: 1, Action: "OR", },  { Name: "mdb", Type: 1, Action: "OR", },  { Name: "struts", Type: 1, Action: "OR", },  { Name: "txn", Type: 1, Action: "OR", },  { Name: "web-servlet", Type: 1, Action: "OR", },  },
+            []*BinTag{  { Name: "cdi", Type: 1, Action: "OR", },  { Name: "ejb", Type: 1, Action: "OR", },  { Name: "jax-ws", Type: 1, Action: "OR", },  { Name: "jsf", Type: 1, Action: "OR", },  { Name: "mdb", Type: 1, Action: "OR", },  { Name: "struts", Type: 1, Action: "OR", },  { Name: "txn", Type: 1, Action: "OR", },  { Name: "servlet", Type: 1, Action: "OR", },  },
              },
         
             { Name: "MICRO-SERVICE",

@@ -34,12 +34,22 @@ type Rule struct {
 	Tags            []Tag          `json:",omitempty" yaml:",omitempty"`
 	Recipes         []Recipe       `gorm:"foreignkey:RuleID" json:",omitempty" yaml:",omitempty"`
 	Patterns        []Pattern      `gorm:"foreignkey:RuleID"`
+	Excludepatterns []ExcludePattern      `gorm:"foreignkey:RuleID" json:",omitempty" yaml:",omitempty"`
 	fileNameRegex   *regexp.Regexp `gorm:"-" json:"-" yaml:"-"`
 	regex           *regexp.Regexp `gorm:"-" json:"-" yaml:"-"`
 	Metric          *RuleMetric    `gorm:"-" json:"-" yaml:"-"`
 	overrideApplies bool           `gorm:"-" json:"-" yaml:"-"`
 	Negative        bool           `gorm:"type:integer"`
 	sync.Mutex      `gorm:"-" json:"-" yaml:"-"`
+	Profiles        []Profile      `json:",omitempty" yaml:",omitempty"`
+	
+	//Extra Metadata for rule curation purposes
+	Metadata_sno         string `gorm:"type:text"`
+	Metadata_category    string `gorm:"type:text"`
+	Metadata_title       string `gorm:"type:text"`
+	Metadata_description string `gorm:"type:text"`
+	Metadata_group       string `gorm:"type:text"`
+	Metadata_criticality string `gorm:"type:text"`
 }
 
 func (r *Rule) Applies(fileExt string, fileName string) bool {
@@ -154,6 +164,18 @@ func (r *Rule) HasTag(tag string) bool {
 	return false
 }
 
+func (r *Rule) HasProfile(profile string) bool {
+	if profile != "" && len(r.Profiles) > 0 {
+		for i := range r.Profiles {
+			//Case insensitive matching!
+			if strings.ToLower(profile) == strings.ToLower(r.Profiles[i].Value) {
+				return true
+			}
+		}
+	}
+	return false
+}
+
 func (r *Rule) CompilePatterns() {
 	r.Lock()
 	defer r.Unlock()
@@ -177,7 +199,7 @@ func (r *Rule) GetEscapedPattern() string {
 	return util.EscapeSpecials(r.DefaultPattern)
 }
 
-func (r *Rule) UpdateRule(newRule Rule) (deletedPatterns []Pattern, deletedRecipes []Recipe, deletedTags []Tag) {
+func (r *Rule) UpdateRule(newRule Rule) (deletedPatterns []Pattern, deletedRecipes []Recipe, deletedTags []Tag, deletedExcludePatterns []ExcludePattern, deletedProfiles []Profile) {
 
 	if newRule.Advice != "" && newRule.Advice != r.Advice {
 		r.Advice = newRule.Advice
@@ -218,6 +240,8 @@ func (r *Rule) UpdateRule(newRule Rule) (deletedPatterns []Pattern, deletedRecip
 	deletedPatterns = r.updatePatterns(newRule)
 	deletedRecipes = r.updateRecipes(newRule)
 	deletedTags = r.updateTags(newRule)
+	deletedProfiles = r.updateProfiles(newRule)
+	deletedExcludePatterns = r.updateExcludePatterns(newRule)
 
 	return
 }
@@ -350,6 +374,56 @@ func (r *Rule) updateRecipes(newRule Rule) (deleted []Recipe) {
 	return deleted
 }
 
+func (r *Rule) updateExcludePatterns(newRule Rule) (deleted []ExcludePattern) {
+
+	var newExcludePatterns int
+
+	if len(newRule.Excludepatterns) > 0 {
+
+		for _, excludePattern := range newRule.Excludepatterns {
+
+			var patternMatched = false
+
+			for i, _ := range r.Excludepatterns {
+
+				if excludePattern.Value == r.Excludepatterns[i].Value {
+					patternMatched = true
+				}
+			}
+
+			if !patternMatched {
+				r.Excludepatterns = append(r.Excludepatterns, excludePattern)
+				newExcludePatterns++
+			}
+		}
+
+		for i := len(r.Excludepatterns) - 1; i >= 0; i-- {
+
+			var found = false
+
+			excludePattern := r.Excludepatterns[i]
+
+			for _, matchedExcludePattern := range newRule.Excludepatterns {
+				if excludePattern.Value == matchedExcludePattern.Value {
+					found = true
+					break
+				}
+			}
+
+			if !found {
+				r.Excludepatterns = append(r.Excludepatterns[:i], r.Excludepatterns[i+1:]...)
+				deleted = append(deleted, excludePattern)
+			}
+		}
+
+		if *util.Verbose {
+			fmt.Printf(" Excludepatterns[added:%d deleted:%d] ", newExcludePatterns, len(deleted))
+		}
+	}
+
+	return deleted
+}
+
 func (r *Rule) updateTags(newRule Rule) (deleted []Tag) {
 
 	var newTags int
@@ -394,6 +468,56 @@ func (r *Rule) updateTags(newRule Rule) (deleted []Tag) {
 
 		if *util.Verbose {
 			fmt.Printf(" Tags[added:%d deleted:%d] ", newTags, len(deleted))
+		}
+	}
+
+	return deleted
+}
+
+func (r *Rule) updateProfiles(newRule Rule) (deleted []Profile) {
+
+	var newProfiles int
+
+	if len(newRule.Profiles) > 0 {
+
+		for _, profile := range newRule.Profiles {
+
+			var profileMatched = false
+
+			for i, _ := range r.Profiles {
+
+				if profile.Value == r.Profiles[i].Value {
+					profileMatched = true
+				}
+			}
+
+			if !profileMatched {
+				r.Profiles = append(r.Profiles, profile)
+				newProfiles++
+			}
+		}
+
+		for i := len(r.Profiles) - 1; i >= 0; i-- {
+
+			var found = false
+
+			profile := r.Profiles[i]
+
+			for _, matchedProfile := range newRule.Profiles {
+				if profile.Value == matchedProfile.Value {
+					found = true
+					break
+				}
+			}
+
+			if !found {
+				r.Profiles = append(r.Profiles[:i], r.Profiles[i+1:]...)
+				deleted = append(deleted, profile)
+			}
+		}
+
+		if *util.Verbose {
+			fmt.Printf(" Profiles[added:%d deleted:%d] ", newProfiles, len(deleted))
 		}
 	}
 

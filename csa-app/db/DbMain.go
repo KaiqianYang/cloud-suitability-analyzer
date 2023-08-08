@@ -70,7 +70,9 @@ func OpenDB(run *model.Run) *gorm.DB {
 	defer rows.Close()
 	for rows.Next() {
 		rows.Scan(&version)
-		fmt.Printf("CSA: %s DBEngine: %s-%s\tDBName: %s\n", util.App.Model().Version, *util.DB, version, *util.DBName)
+		if (!*util.Xtract) {
+			fmt.Printf("CSA: %s DBEngine: %s-%s\tDBName: %s\n", util.App.Model().Version, *util.DB, version, *util.DBName)
+		}
 	}
 
 	return DB
@@ -163,11 +165,12 @@ func checkAndCreateDBDir() {
 }
 
 func createSchema(database *gorm.DB) error {
+	
 	//Create Run
 	db := database.AutoMigrate(model.Run{}, model.ReportRef{}, model.ReportHeader{}, model.ReportData{}, model.Rule{},
 		model.Recipe{}, &model.Pattern{}, model.Tag{}, model.Finding{}, model.FindingTag{}, model.FindingRecipe{},
 		model.RunSloc{}, model.RuleMetric{}, model.Application{}, model.ApplicationTag{}, model.Bin{}, model.BinTag{},
-		model.ScoringModel{})
+		model.ScoringModel{},model.ExcludePattern{}, model.ScoringModel{},model.Profile{})
 
 	return db.Error
 }
