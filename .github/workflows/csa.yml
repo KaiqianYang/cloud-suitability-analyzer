@@ -40,7 +40,7 @@ jobs:
 
       # macos-12 runner seems old go@1.17 make go-bindata install fail
       - name: install go-bindata
-        run: brew update && sudo rm -rf /usr/local/opt/go@1.17 && brew install go-bindata
+        run: brew update && brew install go-bindata
 
       - name: Build
         run: ./build.sh
