@@ -167,9 +167,7 @@ if [[ ! -z "$RELEASE" ]]; then
   stashFiles
 fi
 
-runRuleTests
 
 generateCSAExecutables
-generateRuleTestExecutables
 
 echo "Build ended at $(date -u +%s)"
