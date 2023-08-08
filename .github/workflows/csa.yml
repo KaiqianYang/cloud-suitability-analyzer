@@ -2,69 +2,31 @@ name: Go
 
 on:
   push:
-    branches: [ build-private-preview-release ]
+    branches: [ master, build-private-preview-release ]
+  pull_request:
+    branches: [ master ]
 
 jobs:
 
-  buildW:
+  build:
     name: Build
     runs-on: ubuntu-latest
     steps:
 
       - name: Check out code into the Go module directory
-        uses: actions/checkout@master
+        uses: actions/checkout@v3
 
-      - name: install go-bindata
-        run: sudo apt update && sudo apt install -y go-bindata
+      - name: Install Dependencies
+        run: sudo apt install -y nodejs npm golang go-bindata musl-tools gcc-mingw-w64 build-essential
 
-      - name: install windows compilers
-        run: sudo apt update && sudo apt install -y gcc-multilib && sudo apt install -y gcc-mingw-w64
+      - name: Install goreleaser
+        run: sudo snap install goreleaser --classic
 
       - name: Build
-        run: ./build-Local.sh W
+        run: ./build.sh
 
       - name: Upload artifacts
         uses: actions/upload-artifact@master
         with:
           name: buildFiles
-          path: csa-app/exe
-
-  buildL:
-    name: Build linux
-    runs-on: ubuntu-latest
-    steps:
-
-      - name: Check out code into the Go module directory
-        uses: actions/checkout@master
-
-      - name: install go-bindata
-        run: sudo apt update && sudo apt install -y go-bindata
-
-      - name: Build
-        run: ./build-Local.sh L
-
-      - name: Upload artifacts
-        uses: actions/upload-artifact@master
-        with:
-          name: buildlinux
-          path: csa-app/exe
-
-  buildOnMacos:
-    name: Build on macos
-    runs-on: macos-12
-    steps:
-      - name: Check out code into the Go module directory
-        uses: actions/checkout@master
-
-      # macos-12 runner seems old go@1.17 make go-bindata install fail
-      - name: install go-bindata
-        run: brew update && sudo rm -rf /usr/local/opt/go@1.17 && brew install go-bindata
-
-      - name: Build
-        run: ./build-Local.sh O
-
-      - name: Upload artifacts
-        uses: actions/upload-artifact@master
-        with:
-          name: buildMacos
-          path: csa-app/exe
+          path: csa-app/dist
